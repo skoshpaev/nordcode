@@ -20,8 +20,8 @@
 !var/log/.gitkeep
 
 # Parameters
-/app/config/parameters.yml
-/app/config/parameters.ini
+/config/parameters.yml
+/config/parameters.ini
 
 # Managed by Composer
 /app/bootstrap.php.cache
@@ -50,3 +50,27 @@
 
 # Embedded web-server pid file
 /.web-server-pid
+
+docker/docker-compose-test.yml
+docker/docker-compose.yml
+/docker/var.env
+/docker/var_test.env
+docker/data
+docker/data_test
+docker/logs
+.idea
+
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+###< symfony/phpunit-bridge ###
+
