@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,12 +23,33 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks", name="app_user_tasks")
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $tasks = $this->getUser()->getTasks();
+        $page = $request->get('page') ?? 1;
+
+        $query = $this->getTaskRepository()->createQueryBuilder('t')
+            ->where('t.user = :userid')
+            ->orderBy('t.id', 'DESC')
+            ->setParameter('userid', $this->getUser()->getId())
+            ->getQuery();
+
+        $pageSize = '10';
+
+        $paginator = new Paginator($query);
+        $totalItems = count($paginator);
+        $pagesCount = ceil($totalItems / $pageSize);
+
+        $paginator
+            ->getQuery()
+            ->setFirstResult($pageSize * ($page-1))
+            ->setMaxResults($pageSize);
+
 
         return $this->render('task/index.html.twig', [
-            'tasks' => $tasks
+            'tasks' => $paginator,
+            'page_count' => $pagesCount,
+            'total' => $totalItems,
+            'page' => $page
         ]);
     }
 
