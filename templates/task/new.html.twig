@@ -55,30 +55,42 @@
     }
 </style>
   <div class="text-center">
-    <form class="form-signin" method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+      {{ form_start(form) }}
+      <div class="label">
+          {{ form_errors(form) }}
+      </div>
 
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-            </div>
-        {% endif %}
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="inputEmail">Email</label>
-        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
-        <label for="inputPassword">Password</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" required>
+      <div class="field">
+          <label class="label">{{ form_label(form.title) }}</label>
+          <div class="control">
+              {{ form_widget(form.title) }}
+          </div>
+      </div>
+      <div class="field">
+          <label class="label">{{ form_label(form.comment) }}</label>
+          <div class="control">
+              {{ form_widget(form.comment) }}
+          </div>
+      </div>
+      <div class="field">
+          <label class="label">{{ form_label(form.date) }}</label>
+          <div class="control">
+              {{ form_widget(form.date) }}
+          </div>
+      </div>
+      <div class="field">
+          <label class="label">{{ form_label(form.timespent) }}</label>
+          <div class="control">
+              {{ form_widget(form.timespent) }}
+          </div>
+      </div>
 
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-      <p class="mt-5 mb-3 text-muted">&copy; 2021</p>
-    </form>
+      <div class="field" style="margin-top: 10px;">
+          <p class="control">
+              {{ form_widget(form.save) }}
+          </p>
+      </div>
+      {{ form_end(form) }}
   </div>
 
 
