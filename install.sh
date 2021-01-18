@@ -11,5 +11,7 @@ alias console='docker-compose exec fpm bin/console'
 dd up -d
 
 dd exec fpm composer install
+console doctrine:migrations:migrate -n
+console doctrine:fixtures:load -n
 
 sh test.sh

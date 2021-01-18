@@ -1,20 +1,170 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TaskController!{% endblock %}
-
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Your tasks</a>
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="/logout">Sign out</a>
+            </li>
+        </ul>
+    </nav>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <span data-feather="home"></span>
+                                Dashboard <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/html/src/Controller/TaskController.php'|file_link(0) }}">src/Controller/TaskController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/html/templates/task/index.html.twig'|file_link(0) }}">templates/task/index.html.twig</a></code></li>
-    </ul>
-</div>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+                    <h1 class="h2">Your tasks</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group mr-2">
+                            <a href="/tasks/new" class="btn btn-sm btn-outline-success">Add</a>
+                            <button class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#modal">Export</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Comment</th>
+                            <th>Date</th>
+                            <th>Timespent</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                                <tr>
+                                    <td>{{ task.getId() }}</td>
+                                    <td>{{ task.getTitle() }}</td>
+                                    <td>{{ task.getComment() }}</td>
+                                    <td>{{ task.getDate() | date('d-m-Y') }}</td>
+                                    <td>{{ task.getTimespent() }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            {% if page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="/tasks?page={{ page - 1 }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if page > 1 %}
+                                <li class="page-item"><a class="page-link" href="/tasks?page={{ page - 1 }}">{{ page - 1 }}</a></li>
+                            {% endif %}
+                            <li class="page-item active"><a class="page-link" href="#">{{ page }}</a></li>
+                            {% if page < page_count %}
+                                <li class="page-item"><a class="page-link" href="/tasks?page={{ page_count }}">{{ page_count }}</a></li>
+                            {% endif %}
+                            {% if (page + 1) <= page_count %}
+                                <li class="page-item">
+                                    <a class="page-link" href="/tasks?page={{ page + 1 }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        $( function() {
+            $( "#datepicker" ).datepicker();
+            $( "#datepicker2" ).datepicker();
+        } );
+    </script>
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="auto-jsCalendar">
+                        <form action="/export" method="post">
+                            <p>Date 1: <input type="text" id="datepicker"></p>
+                            <p>Date 2: <input type="text" id="datepicker2"></p>
+                            <div>
+                                <input type="radio" id="csv" name="format" value="csv"
+                                       checked>
+                                <label for="huey">CSV</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="PDF" name="format" value="pdf">
+                                <label for="huey">PDF</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="excel" name="format" value="xlsx">
+                                <label for="huey">Excel</label>
+                            </div>
+
+                            <input type="button" class="btn btn-secondary" value="Show the link" id="export_button"/>
+                            <div class="alert alert-warning" role="alert" id="message" style="margin-top: 10px; display: none">
+                                Fill all the fields
+                            </div>
+
+                            <script>
+                                $( "#export_button" ).click(function() {
+                                    var datepicker1 = $( "#datepicker" ).val();
+                                    var datepicker2 = $( "#datepicker2" ).val();
+                                    var format = $('input[name="format"]:checked').val();;
+                                    if (
+                                        datepicker1 != '' &&
+                                        datepicker2 != ''
+                                    ) {
+                                        $( "#message" ).hide()
+                                        var data = {};
+                                        data.datepicker1 = datepicker1;
+                                        data.datepicker2 = datepicker2;
+                                        data.format = format;
+
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '/export',
+                                            data: JSON.stringify(data),
+                                        }).done(function(data) {
+                                            $("#message").html(data.body.link)
+                                            $( "#message" ).show();
+                                        });
+                                    } else {
+                                        $( "#message" ).show();
+                                    }
+                                });
+                            </script>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 {% endblock %}
