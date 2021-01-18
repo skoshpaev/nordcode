@@ -25,7 +25,7 @@ class AppFixtures extends Fixture
     }
 
     /**
-     * Uncomment it to add 100 of tasks to
+     * Gives default user admin@admin.admin/qwerty123 with tasks
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager)

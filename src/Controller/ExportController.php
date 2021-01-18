@@ -15,10 +15,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class for exporting reports
+ *
+ * Class ExportController
+ * @package App\Controller
+ */
 class ExportController extends AbstractController
 {
     private TaskRepository $taskRepository;
 
+    /**
+     * ExportController constructor.
+     * @param TaskRepository $taskRepository
+     */
     public function __construct(TaskRepository $taskRepository)
     {
         $this->taskRepository = $taskRepository;
@@ -58,6 +68,8 @@ class ExportController extends AbstractController
     }
 
     /**
+     * Gives a ready link to download a report
+     *
      * @param $tasks
      * @return string
      * @throws Exception

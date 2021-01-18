@@ -11,10 +11,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Controller that works with tasks
+ *
+ * Class TaskController
+ * @package App\Controller
+ */
 class TaskController extends AbstractController
 {
     private TaskRepository $taskRepository;
 
+    /**
+     * TaskController constructor.
+     * @param TaskRepository $taskRepository
+     */
     public function __construct(TaskRepository $taskRepository)
     {
         $this->taskRepository = $taskRepository;
