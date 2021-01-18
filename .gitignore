@@ -74,4 +74,4 @@ docker/logs
 .phpunit.result.cache
 ###< symfony/phpunit-bridge ###
 
-/public/documents/*
+#/public/documents/*

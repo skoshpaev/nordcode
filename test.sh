@@ -5,5 +5,15 @@ cp .env.test .env.test.local
 
 alias dd_test='docker-compose -f docker-compose-test.yml'
 dd_test up -d
+
+FILE=bin/phpunit
+if test -f "$FILE"; then
+    echo "$FILE exists. No further actions."
+else
+    echo "$FILE does not exist. Adding a dependency"
+    docker-compose exec fpm_test composer require --dev symfony/phpunit-bridge
+fi
+
+
 dd_test exec fpm_test bin/phpunit --bootstrap=tests/bootstrap.php
 dd_test down
