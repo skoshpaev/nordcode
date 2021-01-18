@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Task;
+use Datetime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @method Task|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +21,23 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
-    // /**
-    //  * @return Task[] Returns an array of Task objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Datetime $date1
+     * @param Datetime $date2
+     * @return int|mixed|string
+     * @throws Exception
+     */
+    public function findByDate(Datetime $date1, Datetime $date2)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        $qb = $this->createQueryBuilder("e");
+        $qb
+            ->andWhere('e.date BETWEEN :from AND :to')
+            ->setParameter('from', $date1 )
+            ->setParameter('to', $date2)
         ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Task
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
     }
-    */
 }

@@ -31,7 +31,7 @@
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group mr-2">
                             <a href="/tasks/new" class="btn btn-sm btn-outline-success">Add</a>
-                            <button class="btn btn-sm btn-outline-info">Export</button>
+                            <button class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#modal">Export</button>
                         </div>
                     </div>
                 </div>
@@ -92,12 +92,79 @@
             </main>
         </div>
     </div>
+    <script>
+        $( function() {
+            $( "#datepicker" ).datepicker();
+            $( "#datepicker2" ).datepicker();
+        } );
+    </script>
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="auto-jsCalendar">
+                        <form action="/export" method="post">
+                            <p>Date 1: <input type="text" id="datepicker"></p>
+                            <p>Date 2: <input type="text" id="datepicker2"></p>
+                            <div>
+                                <input type="radio" id="csv" name="format" value="csv"
+                                       checked>
+                                <label for="huey">CSV</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="PDF" name="format" value="pdf">
+                                <label for="huey">PDF</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="excel" name="format" value="xlsx">
+                                <label for="huey">Excel</label>
+                            </div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+                            <input type="button" class="btn btn-secondary" value="Show the link" id="export_button"/>
+                            <div class="alert alert-warning" role="alert" id="message" style="margin-top: 10px; display: none">
+                                Fill all the fields
+                            </div>
 
+                            <script>
+                                $( "#export_button" ).click(function() {
+                                    var datepicker1 = $( "#datepicker" ).val();
+                                    var datepicker2 = $( "#datepicker2" ).val();
+                                    var format = $('input[name="format"]:checked').val();;
+                                    if (
+                                        datepicker1 != '' &&
+                                        datepicker2 != ''
+                                    ) {
+                                        $( "#message" ).hide()
+                                        var data = {};
+                                        data.datepicker1 = datepicker1;
+                                        data.datepicker2 = datepicker2;
+                                        data.format = format;
+
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '/export',
+                                            data: JSON.stringify(data),
+                                        }).done(function(data) {
+                                            $("#message").html(data.body.link)
+                                            $( "#message" ).show();
+                                        });
+                                    } else {
+                                        $( "#message" ).show();
+                                    }
+                                });
+                            </script>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Icons -->
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 {% endblock %}
