@@ -51,8 +51,8 @@
 # Embedded web-server pid file
 /.web-server-pid
 
-docker/docker-compose-test.yml
-docker/docker-compose.yml
+docker-compose-test.yml
+docker-compose.yml
 /docker/var.env
 /docker/var_test.env
 docker/data

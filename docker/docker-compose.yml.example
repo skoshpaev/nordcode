@@ -23,7 +23,7 @@ services:
       - ./:/var/www/html
     working_dir: /var/www/html
     expose:
-      - 9001
+      - 9000
     links:
       - mysql
     networks:
